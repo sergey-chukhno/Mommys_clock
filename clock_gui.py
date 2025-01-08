@@ -13,6 +13,7 @@ class MommysClock(QWidget): # Our class inherits from QWidte class
     self.is_paused = False # Boolean to track if the clock is paused. 
     self.is_24hr_mode = False # Boolean to track time mode. By default, we set 12-hours AM/PM mode
     self.alarm_time = None # We initialize our alarm time variable. Initially, we have no alarm. 
+    self.custom_time = None # Manually set time 
     self.initUI()
 
   # Method to design UI of the digital clock
@@ -115,25 +116,37 @@ class MommysClock(QWidget): # Our class inherits from QWidte class
   # method to update time 
   def update_time(self): 
     if not self.is_paused: # If the clock is running
-      current_time = QTime.currentTime()
-      # If 24-hour mode, show time in 'HH:mm:ss'
-      if self.is_24hr_mode:
-        time_string = current_time.toString('HH:mm:ss')
+      if self.custom_time: 
+        self.custom_time = self.custom_time.addSecs(1)
+
+        if self.is_24hr_mode:
+          time_string = self.custom_time.toString('HH:mm:ss')
+        else: 
+          time_string = self.custom_time.toString('hh:mm:ss AP')
+      
       else: 
-        time_string = current_time.toString('hh:mm:ss AP')
+        current_time = QTime.currentTime()
+        # If 24-hour mode, show time in 'HH:mm:ss'
+        if self.is_24hr_mode:
+          time_string = current_time.toString('HH:mm:ss')
+        else: 
+          time_string = current_time.toString('hh:mm:ss AP')
+
     self.time_label.setText(time_string) 
 
     # Check for alarm time
+    # Check time (use custom time or system time)
+    check_time = self.custom_time if self.custom_time else QTime.currentTime()
     if self.alarm_time: 
       # we check for the format of set alarm time (we need to make sure that alarm time and current time are in the same mode)
       if self.is_24hr_mode:
         # if 24 hrs mode, compare in 'HH:mm:ss'
-        formatted_current_time = current_time.toString('HH:mm:ss')
+        formatted_current_time = check_time.toString('HH:mm:ss')
         formatted_alarm_time = self.alarm_time.toString('HH:mm:ss')
       else:
         # if 12-hrs-mode, compare in 'hh:mm:ss AP'
-        formatted_current_time = current_time.toString('hh:mm:ss AP')
-        formatted_current_time = current_time.toString('hh:mm:ss AP')
+        formatted_current_time = check_time.toString('hh:mm:ss AP')
+        formatted_alarm_time = self.alarm_time.toString('hh:mm:ss AP')
       
       # Check if the current time matches alarm time
       if formatted_current_time == formatted_alarm_time: 
@@ -143,15 +156,15 @@ class MommysClock(QWidget): # Our class inherits from QWidte class
   def set_time(self, time_tuple): 
     hours, minutes, seconds = time_tuple 
     self.timer.stop() # Stop the timer temporarily while we are setting time
-    new_time = QTime(hours, minutes, seconds)
+    self.custom_time = QTime(hours, minutes, seconds)
     self.alarm_time = None # Clear alarm when setting the time
-    self.time_label.setText(new_time.toString('hh:mm:ss AP'))
+    self.time_label.setText(self.custom_time.toString('hh:mm:ss AP'))
     self.timer.start(1000) # Restart timer
 
   # Set alarm at a specific time
   def set_alarm(self, alarm_tuple):
     hours, minutes, seconds = alarm_tuple
-    self.alarm_time = QTime(hours, minutes, seconds).toString('hh:mm:ss AP')
+    self.alarm_time = QTime(hours, minutes, seconds)
   
   # Show a pop-up message when the alarm time is reached
   def show_alarm_message(self): 
