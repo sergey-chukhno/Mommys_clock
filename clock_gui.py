@@ -239,16 +239,26 @@ class MommysClock(QWidget):
 
         layout = RadioButtonLayout()
         sounds = ['Ring', 'Beep', 'Melody', 'Chime']
+        selected_sound = None
+
         for sound in sounds:
             radio_button = QRadioButton(sound, dialog)
-            radio_button.toggled.connect(lambda checked, sound=sound: self.set_alarm_sound(sound) if checked else None)
+            radio_button.toggled.connect(lambda checked, sound=sound: setattr(self, 'selected_sound', sound) if checked else None)
             layout.addWidget(radio_button)
+
+        def confirm_sound():
+            if hasattr(self, 'selected_sound') and self.selected_sound:
+                self.alarm_sound = self.selected_sound
+                self.time_label.setText(f"Sound: {self.alarm_sound}")
+                QTimer.singleShot(10000, self.update_time)  # Revert after 5 seconds
+                dialog.accept()
+
+        set_button = QPushButton('Set', dialog)
+        set_button.clicked.connect(confirm_sound)
+        layout.addWidget(set_button)
 
         dialog.setLayout(layout)
         dialog.exec_()
-
-    def set_alarm_sound(self, sound):
-        self.alarm_sound = sound
 
     def show_error_message(self, message):
         msg = QMessageBox()
@@ -263,6 +273,31 @@ if __name__ == '__main__':
     window = MommysClock()
     window.show()
     sys.exit(app.exec_())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
