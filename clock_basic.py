@@ -1,7 +1,9 @@
+
 import time 
 import threading 
 from datetime import datetime, timedelta 
 import os, select, sys
+import pytz # Library for accurate timezone handling, commonly used with datetime
 
 class MommysClock: 
   def __init__(self): 
@@ -9,7 +11,8 @@ class MommysClock:
     self.alarm_time = None 
     self.is_running = True
     self.is_paused = False 
-    self.is_24hr_mode = True 
+    self.is_24hr_mode = True
+    self.timezone = pytz.timezone('Europe/Paris') # By default, we use Central European Timezone (Paris/Europe) 
   
   def run_clock(self): 
     while self.is_running: 
@@ -32,14 +35,13 @@ class MommysClock:
           input()
           break
 
-      
-
   def set_time(self, time_tuple): 
     hours, minutes, seconds = time_tuple
     self.current_time = self.current_time.replace(hour=hours, minute=minutes, second=seconds)
     print(f"Time set to {self.current_time.strftime('%H:%M:%S')}")
-    print("Press Enter to return to menu.")
+    print('Press Enter to return to menu')
     input()
+
 
   def set_alarm(self, time_tuple): 
     hours, minutes, seconds = time_tuple
@@ -59,6 +61,22 @@ class MommysClock:
     print(f"Time format switched to {mode} mode.")
     print("Press Enter to return to menu.")
     input()
+
+  def choose_timezone(self):
+    self.clear_screen()
+    print('Choose a timezone:')
+    timezones = ['Europe/Paris', 'UTC', 'America/New_York', 'America/Los_Angeles', 'Asia/Tokyo']
+    for index, timezone in enumerate(timezones): 
+      print(f'{index+1}.{timezone}')
+    choice = input('Enter the number between (1-5) to choose timezone:')
+    if choice.isdigit() and 1 <= int(choice) <= len(timezones): 
+      self.timezone = pytz.timezone(timezones[int(choice) - 1])
+      print(f'Timezone set to: {timezones[int(choice) - 1]}')
+    else: 
+      print('Choice incorrect. Please try again. Timezone set by default is Europe/Paris')
+    print('Press Enter to return to menu')
+    input() 
+       
 
   def pause_clock(self):
     self.is_paused = True
@@ -80,8 +98,7 @@ class MommysClock:
     if os.name == 'nt':  
       os.system('cls')
     else:  
-      os.system('clear')
-
+      os.system('clear') 
 
 def main(): 
   clock = MommysClock()
@@ -97,9 +114,10 @@ def main():
     print("2. Set Time")
     print("3. Set Alarm")
     print("4. Change 12/24 Hour Mode")
-    print("5. Pause Clock")
-    print("6. Resume Clock")
-    print("7. Exit")  
+    print("5. Choose Timezone")
+    print("6. Pause Clock")
+    print("7. Resume Clock")
+    print("8. Exit")  
 
     choice = input('Enter your choice: ')
 
@@ -113,15 +131,17 @@ def main():
       clock.set_alarm(time_tuple)
     elif choice == '4':
       clock.change_time_mode()
-    elif choice == '5':
-      clock.pause_clock()
+    elif choice == '5': 
+      clock.choose_timezone()
     elif choice == '6':
-      clock.resume_clock()
+      clock.pause_clock()
     elif choice == '7':
+      clock.resume_clock()
+    elif choice == '8':
       clock.stop_clock()
       break
     else:
-      print("The number you have entered is incorrect. Please choose a number between 1 and 7.")
+      print("The number you have entered is incorrect. Please choose a number between 1 and 8.")
 
   clock_thread.join()
 
