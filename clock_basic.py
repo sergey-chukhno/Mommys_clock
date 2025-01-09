@@ -53,7 +53,6 @@ class MommysClock:
   
   def check_alarm(self): 
     if self.alarm_time and self.current_time == self.alarm_time: 
-      self.clear_screen()
       print("\n\n⏰ ALARM! Time to wake up! ⏰")
       print(f'{self.alarm_sound}')
       self.alarm_time = None
