@@ -39,32 +39,32 @@ class MommysClock(QWidget):
 
         self.set_time_button = QPushButton('Set Time', self)
         self.set_time_button.clicked.connect(self.set_time_dialog)
-        self.set_time_button.setFixedSize(140, 140)
+        self.set_time_button.setFixedSize(160, 140)
         button_layout.addWidget(self.set_time_button)
 
         self.set_alarm_button = QPushButton('Set Alarm', self)
         self.set_alarm_button.clicked.connect(self.set_alarm_dialog)
-        self.set_alarm_button.setFixedSize(140, 140)
+        self.set_alarm_button.setFixedSize(160, 140)
         button_layout.addWidget(self.set_alarm_button)
 
         self.pause_button = QPushButton('Pause', self)
         self.pause_button.clicked.connect(self.toggle_pause)
-        self.pause_button.setFixedSize(140, 140)
+        self.pause_button.setFixedSize(160, 140)
         button_layout.addWidget(self.pause_button)
 
         self.change_time_mode_button = QPushButton('Time Mode', self)
         self.change_time_mode_button.clicked.connect(self.change_time_mode)
-        self.change_time_mode_button.setFixedSize(140, 140)
+        self.change_time_mode_button.setFixedSize(160, 140)
         button_layout.addWidget(self.change_time_mode_button)
 
-        self.set_time_zone_button = QPushButton('Set Time Zone', self)
+        self.set_time_zone_button = QPushButton('Time Zone', self)
         self.set_time_zone_button.clicked.connect(self.set_time_zone_dialog)
-        self.set_time_zone_button.setFixedSize(140, 140)
+        self.set_time_zone_button.setFixedSize(160, 140)
         button_layout.addWidget(self.set_time_zone_button)
 
-        self.set_alarm_sound_button = QPushButton('Set Alarm Sound', self)
+        self.set_alarm_sound_button = QPushButton('Alarm Sound', self)
         self.set_alarm_sound_button.clicked.connect(self.set_alarm_sound_dialog)
-        self.set_alarm_sound_button.setFixedSize(140, 140)
+        self.set_alarm_sound_button.setFixedSize(160, 140)
         button_layout.addWidget(self.set_alarm_sound_button)
 
         button_container = QHBoxLayout()
@@ -158,7 +158,7 @@ class MommysClock(QWidget):
     def show_alarm_message(self):
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Information)
-        msg.setText('Alarm ringing')
+        msg.setText('Alarm ringing!')
         msg.setWindowTitle('Alarm!')
         msg.exec_()
 
@@ -273,6 +273,54 @@ if __name__ == '__main__':
     window = MommysClock()
     window.show()
     sys.exit(app.exec_())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
