@@ -14,6 +14,7 @@ class MommysClock:
     self.timezone = pytz.timezone('Europe/Paris') # By default, we use Central European Timezone (Paris/Europe) 
     self.alarm_sound = 'Ring'
   
+  # Main function to run clock
   def run_clock(self): 
     while self.is_running: 
       if not self.is_paused: 
@@ -21,6 +22,7 @@ class MommysClock:
         self.check_alarm() 
         time.sleep(1) 
   
+  # Method to display time in the terminal
   def display_time(self):
     while True:
       self.clear_screen()
@@ -35,6 +37,7 @@ class MommysClock:
           input()
           break
 
+  # Method to set time 
   def set_time(self, time_tuple): 
     hours, minutes, seconds = time_tuple
     self.current_time = self.current_time.replace(hour=hours, minute=minutes, second=seconds)
@@ -44,6 +47,7 @@ class MommysClock:
     input()
 
 
+  # Method to set alarm
   def set_alarm(self, time_tuple): 
     hours, minutes, seconds = time_tuple
     self.alarm_time = self.current_time.replace(hour=hours, minute=minutes, second=seconds)
@@ -51,13 +55,14 @@ class MommysClock:
     print("Press Enter to return.")
     input()
   
+  # Method to check if there's alarm
   def check_alarm(self): 
     if self.alarm_time and self.current_time == self.alarm_time: 
       print("\n\n⏰ ALARM! Time to wake up! ⏰")
       print(f'{self.alarm_sound}')
       self.alarm_time = None
       
-
+  # Method to change time mode
   def change_time_mode(self): 
     self.clear_screen()
     self.is_24hr_mode = not self.is_24hr_mode 
@@ -66,6 +71,7 @@ class MommysClock:
     print("Press Enter to return.")
     input()
 
+  # Method to select timezone from a list
   def choose_timezone(self):
     self.clear_screen()
     print('Choose a timezone:')
@@ -82,6 +88,7 @@ class MommysClock:
     print('Press Enter to return')
     input() 
   
+  # Method to select alarm sound from a list
   def choose_alarm_sound(self): 
     self.clear_screen()
     print('Choose an alarm sound:')
@@ -98,7 +105,7 @@ class MommysClock:
     print('Press Enter to return')
     input()
 
-       
+  # Method to pause clock    
   def pause_clock(self):
     self.is_paused = True
     self.clear_screen()
@@ -106,6 +113,7 @@ class MommysClock:
     print("Press Enter to return.")
     input()
   
+  # Method to resume clock
   def resume_clock(self): 
     self.is_paused = False
     self.clear_screen()
@@ -113,17 +121,20 @@ class MommysClock:
     print("Press Enter to return.")
     input()
   
+  # Method to stop clock and go back to terminal
   def stop_clock(self): 
     self.is_running = False
     self.clear_screen
     print('Clock stopped')
 
+  # Method to clear screen
   def clear_screen(self):
     if os.name == 'nt':  
       os.system('cls')
     else:  
       os.system('clear') 
 
+# Function containing main loop and showing menu
 def main(): 
   clock = MommysClock()
   clock_thread = threading.Thread(target=clock.run_clock)
