@@ -3,7 +3,7 @@ import os
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QMessageBox, QInputDialog, QComboBox, QRadioButton, QDialog, QVBoxLayout as RadioButtonLayout
 from PyQt5.QtCore import QTimer, QTime, Qt
 from PyQt5.QtGui import QFont, QFontDatabase
-from pytz import timezone
+from pytz import timezone # Library with timezone commonly used datetime
 from datetime import datetime
 
 
@@ -20,10 +20,13 @@ class MommysClock(QWidget):
         self.alarm_sound = 'Ring'  # Default alarm sound
         self.initUI()
 
+    # Method to initialize graphical interface
     def initUI(self):
+        # Creating main app window
         self.setWindowTitle("Mommy's Clock")
         self.setGeometry(600, 400, 300, 100)
 
+        # Creating main app layout
         main_layout = QVBoxLayout()
 
         self.time_label.setAlignment(Qt.AlignCenter)
@@ -34,6 +37,7 @@ class MommysClock(QWidget):
 
         main_layout.addStretch(1)
 
+        # Creating buttons
         button_layout = QHBoxLayout()
         button_layout.setSpacing(60)
 
@@ -67,11 +71,13 @@ class MommysClock(QWidget):
         self.set_alarm_sound_button.setFixedSize(160, 140)
         button_layout.addWidget(self.set_alarm_sound_button)
 
+        # Positionning buttons below the main label
         button_container = QHBoxLayout()
         button_container.addStretch(1)
         button_container.addLayout(button_layout)
         button_container.addStretch(1)
 
+        # Adding style to buttons
         main_layout.addLayout(button_container)
         main_layout.addStretch(1)
 
@@ -84,6 +90,7 @@ class MommysClock(QWidget):
         self.set_time_zone_button.setStyleSheet(self.button_style())
         self.set_alarm_sound_button.setStyleSheet(self.button_style())
 
+        # Using custom font to show time
         font_path = os.path.join(os.path.dirname(__file__), 'ds_digit.TTF')
         font_id = QFontDatabase.addApplicationFont(font_path)
         font_family = QFontDatabase.applicationFontFamilies(font_id)[0]
@@ -95,6 +102,7 @@ class MommysClock(QWidget):
 
         self.update_time()
 
+    # Method to style buttons
     def button_style(self):
         return '''
             QPushButton {
@@ -113,6 +121,7 @@ class MommysClock(QWidget):
             }
     '''
 
+   # Method to show time in terminal
     def update_time(self):
         if not self.is_paused:
             if self.custom_time:
@@ -143,6 +152,7 @@ class MommysClock(QWidget):
             if formatted_current_time == formatted_alarm_time:
                 self.show_alarm_message()
 
+    # Method to set time
     def set_time(self, time_tuple):
         hours, minutes, seconds = time_tuple
         self.timer.stop()
@@ -151,10 +161,12 @@ class MommysClock(QWidget):
         self.time_label.setText(self.custom_time.toString('hh:mm:ss AP'))
         self.timer.start(1000)
 
+    # Method to set time
     def set_alarm(self, alarm_tuple):
         hours, minutes, seconds = alarm_tuple
         self.alarm_time = QTime(hours, minutes, seconds)
 
+    # Method to show alarm message
     def show_alarm_message(self):
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Information)
@@ -162,6 +174,7 @@ class MommysClock(QWidget):
         msg.setWindowTitle('Alarm!')
         msg.exec_()
 
+    # Method to pause/resume clock
     def toggle_pause(self):
         if self.is_paused:
             self.is_paused = False
@@ -170,10 +183,12 @@ class MommysClock(QWidget):
             self.is_paused = True
             self.timer.stop()
 
+    # Method to modify time mode
     def change_time_mode(self):
         self.is_24hr_mode = not self.is_24hr_mode
         self.update_time()
 
+    # Handling dialog window to set time 
     def set_time_dialog(self):
         text, ok = QInputDialog.getText(self, 'Set Time', 'Enter time: (hh:mm:ss):')
         if ok and text:
@@ -183,6 +198,7 @@ class MommysClock(QWidget):
             except ValueError:
                 self.show_error_message('Invalid time format! Please use hh:mm:ss.')
 
+    # Method to handle the dialog window to set alarm time
     def set_alarm_dialog(self):
         text, ok = QInputDialog.getText(self, 'Set Alarm Time', 'Enter time: (hh:mm:ss):')
         if ok and text:
@@ -192,6 +208,7 @@ class MommysClock(QWidget):
             except ValueError:
                 self.show_error_message('Invalid alarm format! Please use hh:mm:ss.')
 
+    # Method to handle the dialog window to set time zone
     def set_time_zone_dialog(self):
         # Create ComboBox for time zone selection
         time_zone_dialog = QComboBox(self)
@@ -217,6 +234,7 @@ class MommysClock(QWidget):
             padding: 10px 10px;
         """)
 
+        # Method to set time zone
         def set_time_zone():
             selected_timezone = time_zone_dialog.currentText()
             self.time_zone = selected_timezone  # Update the current time zone
@@ -233,6 +251,7 @@ class MommysClock(QWidget):
         dialog.setLayout(layout)
         dialog.exec_()
 
+    # Method to hand dialog window to choose alarm sound
     def set_alarm_sound_dialog(self):
         dialog = QDialog(self)
         dialog.setWindowTitle('Select Alarm Sound')
